@@ -33,6 +33,7 @@ var story_index:int = 0
 @export var text_label: RichTextLabel
 @export var background: TextureRect
 
+# Other data that is required (this could be some other source, like a repository etc)
 @export var available_backgrounds: Array[Texture2D]
 
 # Called when the node enters the scene tree for the first time.
@@ -43,10 +44,22 @@ func _ready():
 	model.text = story_data[story_index].text
 	model.background = story_data[story_index].background
 	
+	next_button.pressed.connect(_next_button_clicked)
+	
 	_update_view()
 
-# Used to update the view 
+# Function to update the current view.
 func _update_view():
 	name_label.text = model.profile_name
 	text_label.text = model.text
 	background.texture = available_backgrounds[model.background]
+
+func _next_button_clicked():
+	if story_index < story_data.size() - 1:
+		story_index = story_index + 1
+		
+		model.profile_name = story_data[story_index].profile
+		model.text = story_data[story_index].text
+		model.background = story_data[story_index].background
+		
+		_update_view()
